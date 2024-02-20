@@ -49,7 +49,7 @@ public class MenuScene extends Scene {
     if (mouseListener.getX() >= exitRect.x && mouseListener.getX() <= exitRect.x + exitRect.width && mouseListener.getY() >= exitRect.y && mouseListener.getY() <= exitRect.y + exitRect.height) {
       exitCurrentImage = exitPressed;
       if (mouseListener.isPressed()) {
-
+        Window.getWindow().close();
       }
     } else {
       exitCurrentImage = exit;
@@ -59,7 +59,7 @@ public class MenuScene extends Scene {
 
   @Override
   public void draw(Graphics g) {
-    g.setColor(Color.WHITE);
+    g.setColor(Color.CYAN);
     g.fillRect(0, 0, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
 
     g.drawImage(title, (int) titleRect.x, (int) titleRect.y, (int) titleRect.width, (int) titleRect.height, null);

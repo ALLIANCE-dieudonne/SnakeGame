@@ -4,11 +4,11 @@ import java.awt.*;
 public class Window extends JFrame implements Runnable {
   public static Window window = null;
   public boolean isRunning;
-  public  int currentState;
-  public  Scene currentScene;
+  public int currentState;
+  public Scene currentScene;
 
-  public  KL keyListener = new KL();
-  public  ML mouseListener = new ML();
+  public KL keyListener = new KL();
+  public ML mouseListener = new ML();
 
   public Window(int width, int height, String title) {
     setSize(width, height);
@@ -30,7 +30,8 @@ public class Window extends JFrame implements Runnable {
     }
     return Window.window;
   }
-  public  void changeState(int newState) {
+
+  public void changeState(int newState) {
     currentState = newState;
     switch (currentState) {
       case 0 -> currentScene = new MenuScene(keyListener, mouseListener);
@@ -42,8 +43,8 @@ public class Window extends JFrame implements Runnable {
     }
   }
 
-  public  void close() {
-
+  public void close() {
+    isRunning = false;
   }
 
   @Override
@@ -61,6 +62,8 @@ public class Window extends JFrame implements Runnable {
     } catch (Exception e) {
       e.printStackTrace();
     }
+
+    this.dispose();
   }
 
   private void update(double dt) {
@@ -73,6 +76,6 @@ public class Window extends JFrame implements Runnable {
 
   private void draw(Graphics g) {
     Graphics2D g2 = (Graphics2D) g;
-   currentScene.draw(g);
+    currentScene.draw(g);
   }
 }
