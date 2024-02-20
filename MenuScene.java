@@ -1,11 +1,11 @@
 import javax.imageio.ImageIO;
 import java.awt.*;
-import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 
 public class MenuScene extends Scene {
   public KL keyListener;
+  public ML mouseListener;
   public BufferedImage title, play, playPressed, exit, exitPressed;
   public Rect playRect, exitRect, titleRect;
 
@@ -13,6 +13,7 @@ public class MenuScene extends Scene {
 
   public MenuScene(KL keyListener, ML mouseListener) {
     this.keyListener = keyListener;
+    this.mouseListener = mouseListener;
 
     try {
       BufferedImage spreadSheet = ImageIO.read(new File("assets/menuSprite.png"));
@@ -36,10 +37,25 @@ public class MenuScene extends Scene {
 
   @Override
   public void update(double dt) {
-    if (keyListener.isKeyPressed(KeyEvent.VK_SPACE)) {
-      System.out.println("spaces pressed");
+    if (mouseListener.getX() >= playRect.x && mouseListener.getX() <= playRect.x + playRect.width && mouseListener.getY() >= playRect.y && mouseListener.getY() <= playRect.y + playRect.height) {
+      playCurrentImage = playPressed;
+      if (mouseListener.isPressed()) {
+        Window.changeState(1);
+      }
+    } else {
+      playCurrentImage = play;
+    }
+
+    if (mouseListener.getX() >= exitRect.x && mouseListener.getX() <= exitRect.x + exitRect.width && mouseListener.getY() >= exitRect.y && mouseListener.getY() <= exitRect.y + exitRect.height) {
+      exitCurrentImage = exitPressed;
+      if (mouseListener.isPressed()) {
+
+      }
+    } else {
+      exitCurrentImage = exit;
     }
   }
+
 
   @Override
   public void draw(Graphics g) {

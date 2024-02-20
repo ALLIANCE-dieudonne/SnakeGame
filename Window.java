@@ -35,6 +35,10 @@ public class Window extends JFrame implements Runnable {
     }
   }
 
+  public static void close() {
+
+  }
+
   @Override
   public void run() {
     double lastFrameTime = 0.0;
