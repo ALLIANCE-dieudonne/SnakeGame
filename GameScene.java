@@ -1,19 +1,31 @@
 import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.awt.geom.Rectangle2D;
 
 public class GameScene extends Scene {
   private Rect background, foreground;
   Snake snake;
+  KL keyListener;
 
-  public GameScene() {
+  public GameScene(KL keyListener) {
     background = new Rect(0, 0, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
     foreground = new Rect(24, 48, 24 * 31, 24 * 22);
     snake = new Snake(5, 48, 48 + 24, 24, 24);
+    this.keyListener = keyListener;
   }
 
   @Override
   public void update(double dt) {
-
+    if (keyListener.isKeyPressed(KeyEvent.VK_RIGHT)) {
+      snake.changeDirection(Direction.RIGHT);
+    } else if (keyListener.isKeyPressed(KeyEvent.VK_DOWN)) {
+      snake.changeDirection(Direction.DOWN);
+    } else if (keyListener.isKeyPressed(KeyEvent.VK_LEFT)) {
+      snake.changeDirection(Direction.LEFT);
+    } else if (keyListener.isKeyPressed(KeyEvent.VK_UP)) {
+      snake.changeDirection(Direction.UP);
+    }
+    snake.update(dt);
   }
 
   @Override

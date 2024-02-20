@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyListener;
 
 public class Window extends JFrame implements Runnable {
   public static Window window = null;
@@ -35,7 +36,7 @@ public class Window extends JFrame implements Runnable {
     currentState = newState;
     switch (currentState) {
       case 0 -> currentScene = new MenuScene(keyListener, mouseListener);
-      case 1 -> currentScene = new GameScene();
+      case 1 -> currentScene = new GameScene(keyListener);
       default -> {
         System.out.println("Unknown scene");
         currentScene = null;
