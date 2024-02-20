@@ -40,7 +40,7 @@ public class MenuScene extends Scene {
     if (mouseListener.getX() >= playRect.x && mouseListener.getX() <= playRect.x + playRect.width && mouseListener.getY() >= playRect.y && mouseListener.getY() <= playRect.y + playRect.height) {
       playCurrentImage = playPressed;
       if (mouseListener.isPressed()) {
-        Window.changeState(1);
+        Window.getWindow().changeState(1);
       }
     } else {
       playCurrentImage = play;
