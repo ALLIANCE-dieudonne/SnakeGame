@@ -39,6 +39,26 @@ public class Snake {
       direction = newDirection;
     }
   }
+  public boolean intersectingWithSelf() {
+    // Check all segments, including the head
+    for (int i = 0; i < body.length; i++) {
+      if (i == head || body[i] == null) {
+        continue; // Skip head and null segments
+      }
+      if (detectIntersection(body[head], body[i])) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+
+
+  public boolean detectIntersection(Rect r1, Rect r2) {
+    return (r1.x >= r2.x && r1.x + r1.width <= r2.x + r2.width &&
+      r1.y >= r2.y && r1.y + r1.height <= r2.y + r2.height);
+  }
+
 
   public void update(double dt) {
     if (waitTimeLeft > 0) {
@@ -69,6 +89,10 @@ public class Snake {
 
     body[head].x = newX;
     body[head].y = newY;
+
+    if (intersectingWithSelf()) {
+      Window.getWindow().changeState(0);
+    }
   }
 
   public void draw(Graphics2D g2) {
