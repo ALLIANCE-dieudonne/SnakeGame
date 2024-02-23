@@ -40,7 +40,7 @@ public class MenuScene extends Scene {
     if (mouseListener.getX() >= playRect.x && mouseListener.getX() <= playRect.x + playRect.width && mouseListener.getY() >= playRect.y && mouseListener.getY() <= playRect.y + playRect.height) {
       playCurrentImage = playPressed;
       if (mouseListener.isPressed()) {
-        Window.getWindow().changeState(1);
+        Window.getWindow().changeState(3);
       }
     } else {
       playCurrentImage = play;
@@ -55,7 +55,6 @@ public class MenuScene extends Scene {
       exitCurrentImage = exit;
     }
   }
-
 
   @Override
   public void draw(Graphics g) {

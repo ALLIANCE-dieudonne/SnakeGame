@@ -7,16 +7,23 @@ public class GameScene extends Scene {
   Snake snake;
   KL keyListener;
 
+  double speed;
   public Food food;
 
-  public GameScene(KL keyListener) {
+  public GameScene(KL keyListener, double speed) {
     background = new Rect(0, 0, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
     foreground = new Rect(24, 48, Constants.TILE_WIDTH * 31, Constants.TILE_WIDTH * 22);
-    snake = new Snake(3, 48, 48 + 24, 24, 24, foreground);
+    snake = new Snake(3, 48, 48 + 24, 24, 24, foreground, speed);
     this.keyListener = keyListener;
     food = new Food(foreground, snake, 12, 12, Color.GREEN);
     food.spawn();
+    this.speed = speed;
   }
+
+  public void setSpeed(double speed) {
+    this.speed = speed;
+  }
+
 
   @Override
   public void update(double dt) {

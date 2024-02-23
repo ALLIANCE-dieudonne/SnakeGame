@@ -6,6 +6,8 @@ public class Snake {
   public Rect[] body = new Rect[100];
   public double bodyWidth, bodyHeight;
 
+  private boolean gameOver = false; // Flag to track game over state
+
   public int size;
   public int tail = 0;
   public int head = 0;
@@ -14,16 +16,17 @@ public class Snake {
 
   public Rect background;
 
-  public double ogWaitBetweenUpdate = 0.1f;
+  public double ogWaitBetweenUpdate;
   public double waitTimeLeft = ogWaitBetweenUpdate;
 
-  public Snake(int size, double startX, double startY, double bodyWidth, double bodyHeight, Rect background) {
+  public Snake(int size, double startX, double startY, double bodyWidth, double bodyHeight, Rect background, double speed) {
     this.size = size;
     this.bodyWidth = bodyWidth;
     this.bodyHeight = bodyHeight;
     this.background = background;
+    this.ogWaitBetweenUpdate = speed;
 
-    for (int i=0; i <= size; i++) {
+    for (int i = 0; i <= size; i++) {
       Rect bodyPiece = new Rect(startX + i * bodyWidth, startY, bodyWidth, bodyHeight);
       body[i] = bodyPiece;
       head++;
@@ -42,6 +45,7 @@ public class Snake {
       direction = newDirection;
     }
   }
+
   public boolean intersectingWithSelf() {
     // Check all segments, including the head
     for (int i = 0; i < body.length; i++) {
@@ -55,9 +59,10 @@ public class Snake {
     return false;
   }
 
-  public boolean intersectingWithBoundaries(Rect head){
+  public boolean intersectingWithBoundaries(Rect head) {
     return (head.x < background.x || (head.x + head.width) > background.x + background.width ||
-      head.y < background.y || (head.y + head.height) > background.y + background.height);}
+      head.y < background.y || (head.y + head.height) > background.y + background.height);
+  }
 
   public boolean detectIntersection(Rect r1, Rect r2) {
     return (r1.x >= r2.x && r1.x + r1.width <= r2.x + r2.width &&
@@ -65,6 +70,10 @@ public class Snake {
   }
 
   public void update(double dt) {
+    if (gameOver) {
+      return; // If game over, don't update the snake
+    }
+
     if (waitTimeLeft > 0) {
       waitTimeLeft -= dt;
       return;
@@ -93,14 +102,14 @@ public class Snake {
     body[head].x = newX;
     body[head].y = newY;
 
-    if (intersectingWithSelf()  ) {
-
+    if (intersectingWithSelf()) {
+      gameOver = true;
       Window.getWindow().changeState(2);
     }
   }
 
   public boolean intersectingWithRect(Rect rect) {
-    for (int i = tail; i !=head; i = (i + 1) % body.length) {
+    for (int i = tail; i != head; i = (i + 1) % body.length) {
       if (detectIntersection(rect, body[i])) {
         return true;
       }
@@ -125,10 +134,14 @@ public class Snake {
       newX = body[tail].x;
       newY = body[tail].y - bodyHeight;
     }
+// Calculation of newX and newY based on the direction
 
     Rect newBodyPiece = new Rect(newX, newY, bodyWidth, bodyHeight);
 
-    tail = (tail - 1) % body.length;
+    tail--; // Decrement tail index
+    if (tail < 0) {
+      tail = body.length - 1; // Wrap around to the end of the array
+    }
     body[tail] = newBodyPiece;
   }
 

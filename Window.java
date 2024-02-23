@@ -41,15 +41,27 @@ public class Window extends JFrame implements Runnable {
 
   public void changeState(int newState) {
     currentState = newState;
+    double speed = 0; // Initialize speed variable
     switch (currentState) {
       case 0 -> currentScene = new MenuScene(keyListener, mouseListener);
-      case 1 -> currentScene = new GameScene(keyListener);
-      case 2 -> currentScene = new GameOverScene(keyListener);
+      case 1 -> {
+        // Retrieve speed from GameLevelScene if the current scene is GameScene
+        if (currentScene instanceof GameLevelScene) {
+          speed = ((GameLevelScene) currentScene).getSpeed();
+        }
+        currentScene = new GameScene(keyListener, speed);
+      }
+      case 2 -> currentScene = new GameOverScene(keyListener, mouseListener);
+
+      case 3 -> currentScene = new GameLevelScene(keyListener, mouseListener);
       default -> {
         System.out.println("Unknown scene.");
         currentScene = null;
       }
     }
+    // Revalidate and repaint the window to reflect the changes
+    revalidate();
+    repaint();
   }
 
   public void update(double dt) {
@@ -62,7 +74,7 @@ public class Window extends JFrame implements Runnable {
   }
 
   public void draw(Graphics g) {
-    Graphics2D g2 = (Graphics2D)g;
+    Graphics2D g2 = (Graphics2D) g;
     currentScene.draw(g);
   }
 
@@ -77,12 +89,12 @@ public class Window extends JFrame implements Runnable {
 
         double deltaWanted = 0.0167;
         update(deltaWanted);
-        long msToSleep = (long)((deltaWanted - deltaTime) * 1000);
+        long msToSleep = (long) ((deltaWanted - deltaTime) * 1000);
         if (msToSleep > 0) {
           Thread.sleep(msToSleep);
         }
       }
-    } catch(Exception e) {
+    } catch (Exception e) {
       e.printStackTrace();
     }
 

@@ -3,12 +3,20 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 
 public class ML extends MouseAdapter implements MouseMotionListener {
-  public boolean isPressed = false;
-  public double x = 0.0, y = 0.0;
+  private boolean isPressed = false;
+  private double x = 0.0, y = 0.0;
+  private ButtonPressListener listener;
+
+  public void setButtonPressListener(ButtonPressListener listener) {
+    this.listener = listener;
+  }
 
   @Override
   public void mousePressed(MouseEvent event) {
     isPressed = true;
+    if (listener != null) {
+      listener.onButtonPressed(event.getX(), event.getY());
+    }
   }
 
   @Override
@@ -32,5 +40,9 @@ public class ML extends MouseAdapter implements MouseMotionListener {
 
   public boolean isPressed() {
     return this.isPressed;
+  }
+
+  public interface ButtonPressListener {
+    void onButtonPressed(double x, double y);
   }
 }
