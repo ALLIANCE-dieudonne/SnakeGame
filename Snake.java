@@ -1,5 +1,4 @@
-import java.awt.Graphics2D;
-import java.awt.Color;
+import java.awt.*;
 import java.awt.geom.Rectangle2D;
 
 public class Snake {
@@ -7,6 +6,7 @@ public class Snake {
   public double bodyWidth, bodyHeight;
 
   private boolean gameOver = false; // Flag to track game over state
+  private boolean paused = false; // Flag to track whether the snake movement is paused
 
   public int size;
   public int tail = 0;
@@ -35,14 +35,16 @@ public class Snake {
   }
 
   public void changeDirection(Direction newDirection) {
-    if (newDirection == Direction.RIGHT && direction != Direction.LEFT) {
-      direction = newDirection;
-    } else if (newDirection == Direction.UP && direction != Direction.DOWN) {
-      direction = newDirection;
-    } else if (newDirection == Direction.LEFT && direction != Direction.RIGHT) {
-      direction = newDirection;
-    } else if (newDirection == Direction.DOWN && direction != Direction.UP) {
-      direction = newDirection;
+    if (!paused) { // Only change direction if not paused
+      if (newDirection == Direction.RIGHT && direction != Direction.LEFT) {
+        direction = newDirection;
+      } else if (newDirection == Direction.UP && direction != Direction.DOWN) {
+        direction = newDirection;
+      } else if (newDirection == Direction.LEFT && direction != Direction.RIGHT) {
+        direction = newDirection;
+      } else if (newDirection == Direction.DOWN && direction != Direction.UP) {
+        direction = newDirection;
+      }
     }
   }
 
@@ -70,8 +72,8 @@ public class Snake {
   }
 
   public void update(double dt) {
-    if (gameOver) {
-      return; // If game over, don't update the snake
+    if (gameOver || paused) {
+      return; // If game over or paused, don't update the snake
     }
 
     if (waitTimeLeft > 0) {
@@ -134,7 +136,6 @@ public class Snake {
       newX = body[tail].x;
       newY = body[tail].y - bodyHeight;
     }
-// Calculation of newX and newY based on the direction
 
     Rect newBodyPiece = new Rect(newX, newY, bodyWidth, bodyHeight);
 
@@ -158,5 +159,11 @@ public class Snake {
       g2.fill(new Rectangle2D.Double(piece.x + 4.0 + subWidth, piece.y + 4.0 + subHeight, subWidth, subHeight));
     }
   }
+  public boolean isGameOver() {
+    return gameOver;
+  }
 
+  public void togglePause() {
+    paused = !paused; // Toggle the paused state
+  }
 }

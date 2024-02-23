@@ -18,5 +18,12 @@ public class KL extends KeyAdapter implements KeyListener {
   public boolean isKeyPressed(int keyCode) {
     return keyPressed[keyCode];
   }
+  public boolean isKeyPressedOnce(int keyCode) {
+    if (keyPressed[keyCode]) {
+      keyPressed[keyCode] = false; // Reset the flag after key is processed
+      return true;
+    }
+    return false;
+  }
 
 }

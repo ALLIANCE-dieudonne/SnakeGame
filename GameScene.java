@@ -6,6 +6,7 @@ public class GameScene extends Scene {
   Rect background, foreground;
   Snake snake;
   KL keyListener;
+  private int score = 0;
 
   double speed;
   public Food food;
@@ -24,7 +25,6 @@ public class GameScene extends Scene {
     this.speed = speed;
   }
 
-
   @Override
   public void update(double dt) {
     if (keyListener.isKeyPressed(KeyEvent.VK_UP)) {
@@ -39,13 +39,25 @@ public class GameScene extends Scene {
 
     if (!food.isSpawned) food.spawn();
 
+    if (snake.intersectingWithRect(food.rect)) {
+      score += 1;
+      System.out.println(score);
+    }
+
     food.update(dt);
-    snake.update(dt);
+    if (!snake.isGameOver()) { // Only update the snake if the game is not over
+      snake.update(dt);
+    }
+
+    if (keyListener.isKeyPressedOnce(KeyEvent.VK_SPACE)) {
+      snake.togglePause(); // Toggle the pause state of the snake when space is pressed
+    }
   }
 
   @Override
   public void draw(Graphics g) {
-    Graphics2D g2 = (Graphics2D)g;
+    Graphics2D g2 = (Graphics2D) g;
+
     g2.setColor(Color.BLACK);
     g2.fill(new Rectangle2D.Double(background.x, background.y, background.width, background.height));
 
