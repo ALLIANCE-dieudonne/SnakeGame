@@ -93,8 +93,9 @@ public class Snake {
     body[head].x = newX;
     body[head].y = newY;
 
-    if (intersectingWithSelf()) {
-      Window.getWindow().changeState(0);
+    if (intersectingWithSelf()  ) {
+
+      Window.getWindow().changeState(2);
     }
   }
 

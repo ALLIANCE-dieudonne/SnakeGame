@@ -41,17 +41,14 @@ public class Window extends JFrame implements Runnable {
 
   public void changeState(int newState) {
     currentState = newState;
-    switch(currentState) {
-      case 0:
-        currentScene = new MenuScene(keyListener, mouseListener);
-        break;
-      case 1:
-        currentScene = new GameScene(keyListener);
-        break;
-      default:
+    switch (currentState) {
+      case 0 -> currentScene = new MenuScene(keyListener, mouseListener);
+      case 1 -> currentScene = new GameScene(keyListener);
+      case 2 -> currentScene = new GameOverScene(keyListener);
+      default -> {
         System.out.println("Unknown scene.");
         currentScene = null;
-        break;
+      }
     }
   }
 
