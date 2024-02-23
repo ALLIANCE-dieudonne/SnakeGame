@@ -8,19 +8,22 @@ public class Snake {
 
   public int size;
   public int tail = 0;
-  public int head;
+  public int head = 0;
 
   public Direction direction = Direction.RIGHT;
+
+  public Rect background;
 
   public double ogWaitBetweenUpdate = 0.1f;
   public double waitTimeLeft = ogWaitBetweenUpdate;
 
-  public Snake(int size, double startX, double startY, double bodyWidth, double bodyHeight) {
+  public Snake(int size, double startX, double startY, double bodyWidth, double bodyHeight, Rect background) {
     this.size = size;
     this.bodyWidth = bodyWidth;
     this.bodyHeight = bodyHeight;
+    this.background = background;
 
-    for (int i = 0; i <= size; i++) {
+    for (int i=0; i <= size; i++) {
       Rect bodyPiece = new Rect(startX + i * bodyWidth, startY, bodyWidth, bodyHeight);
       body[i] = bodyPiece;
       head++;
@@ -45,20 +48,21 @@ public class Snake {
       if (i == head || body[i] == null) {
         continue; // Skip head and null segments
       }
-      if (detectIntersection(body[head], body[i])) {
+      if (detectIntersection(body[head], body[i]) || intersectingWithBoundaries(body[head])) {
         return true;
       }
     }
     return false;
   }
 
-
+  public boolean intersectingWithBoundaries(Rect head){
+    return (head.x < background.x || (head.x + head.width) > background.x + background.width ||
+      head.y < background.y || (head.y + head.height) > background.y + background.height);}
 
   public boolean detectIntersection(Rect r1, Rect r2) {
     return (r1.x >= r2.x && r1.x + r1.width <= r2.x + r2.width &&
       r1.y >= r2.y && r1.y + r1.height <= r2.y + r2.height);
   }
-
 
   public void update(double dt) {
     if (waitTimeLeft > 0) {
@@ -68,7 +72,6 @@ public class Snake {
     waitTimeLeft = ogWaitBetweenUpdate;
     double newX = 0;
     double newY = 0;
-
     if (direction == Direction.RIGHT) {
       newX = body[head].x + bodyWidth;
       newY = body[head].y;
@@ -95,6 +98,39 @@ public class Snake {
     }
   }
 
+  public boolean intersectingWithRect(Rect rect) {
+    for (int i = tail; i !=head; i = (i + 1) % body.length) {
+      if (detectIntersection(rect, body[i])) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  public void grow() {
+    double newX = 0;
+    double newY = 0;
+
+    if (direction == Direction.RIGHT) {
+      newX = body[tail].x - bodyWidth;
+      newY = body[tail].y;
+    } else if (direction == Direction.LEFT) {
+      newX = body[tail].x + bodyWidth;
+      newY = body[tail].y;
+    } else if (direction == Direction.UP) {
+      newX = body[tail].x;
+      newY = body[tail].y + bodyHeight;
+    } else if (direction == Direction.DOWN) {
+      newX = body[tail].x;
+      newY = body[tail].y - bodyHeight;
+    }
+
+    Rect newBodyPiece = new Rect(newX, newY, bodyWidth, bodyHeight);
+
+    tail = (tail - 1) % body.length;
+    body[tail] = newBodyPiece;
+  }
+
   public void draw(Graphics2D g2) {
     for (int i = tail; i != head; i = (i + 1) % body.length) {
       Rect piece = body[i];
@@ -106,7 +142,6 @@ public class Snake {
       g2.fill(new Rectangle2D.Double(piece.x + 4.0 + subWidth, piece.y + 2.0, subWidth, subHeight));
       g2.fill(new Rectangle2D.Double(piece.x + 2.0, piece.y + 4.0 + subHeight, subWidth, subHeight));
       g2.fill(new Rectangle2D.Double(piece.x + 4.0 + subWidth, piece.y + 4.0 + subHeight, subWidth, subHeight));
-
     }
   }
 
