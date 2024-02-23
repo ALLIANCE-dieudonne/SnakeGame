@@ -1,5 +1,6 @@
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.awt.font.FontRenderContext;
 import java.awt.geom.Rectangle2D;
 
 public class GameScene extends Scene {
@@ -7,14 +8,13 @@ public class GameScene extends Scene {
   Snake snake;
   KL keyListener;
   private int score = 0;
-
   double speed;
   public Food food;
 
   public GameScene(KL keyListener, double speed) {
     background = new Rect(0, 0, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
-    foreground = new Rect(24, 48, Constants.TILE_WIDTH * 31, Constants.TILE_WIDTH * 22);
-    snake = new Snake(3, 48, 48 + 24, 24, 24, foreground, speed);
+    foreground = new Rect(24, 96, Constants.TILE_WIDTH * 31, Constants.TILE_WIDTH * 20);
+    snake = new Snake(3, 48, 96 + 24, 24, 24, foreground, speed);
     this.keyListener = keyListener;
     food = new Food(foreground, snake, 12, 12, Color.GREEN);
     food.spawn();
@@ -41,7 +41,6 @@ public class GameScene extends Scene {
 
     if (snake.intersectingWithRect(food.rect)) {
       score += 1;
-      System.out.println(score);
     }
 
     food.update(dt);
@@ -62,9 +61,27 @@ public class GameScene extends Scene {
     g2.fill(new Rectangle2D.Double(background.x, background.y, background.width, background.height));
 
     g2.setColor(Color.WHITE);
+    g2.fill(new Rectangle2D.Double(foreground.x, 48, foreground.width, 40));
+
+    drawText(g2, "Hit SPACE for pause and resume!!", 200, 48 + 35 / 2, Color.BLACK, "Arial", Font.BOLD, 20);
+    drawText(g2, "Score: " + score, 520, 48 + 35 / 2, Color.BLACK, "Arial", Font.BOLD, 20);
+    String appTxt = score < 10 ? "Fantastic" : score < 100 ? "Good Job" : "Excellent";
+    drawText(g2, appTxt, 700, 48 + 35 / 2, Color.BLACK, "Arial", Font.BOLD, 20);
+
+    g2.setColor(Color.WHITE);
     g2.fill(new Rectangle2D.Double(foreground.x, foreground.y, foreground.width, foreground.height));
 
     snake.draw(g2);
     food.draw(g2);
+  }
+
+  private void drawText(Graphics2D g2, String text, int x, int y, Color color, String fontName, int fontStyle, int fontSize) {
+    g2.setColor(color);
+    g2.setFont(new Font(fontName, fontStyle, fontSize));
+    FontRenderContext frc = g2.getFontRenderContext();
+    Rectangle2D bounds = g2.getFont().getStringBounds(text, frc);
+    int textX = (int) (x - bounds.getWidth() / 2);
+    int textY = (int) (y + bounds.getHeight() / 2);
+    g2.drawString(text, textX, textY);
   }
 }
