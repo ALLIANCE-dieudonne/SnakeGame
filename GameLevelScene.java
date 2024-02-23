@@ -8,7 +8,6 @@ public class GameLevelScene extends Scene implements ML.ButtonPressListener {
   private final ML mouseListener;
   double speed = 0;
 
-
   public GameLevelScene(KL keyListener, ML mouseListener) {
     this.keyListener = keyListener;
     this.mouseListener = mouseListener;
@@ -25,18 +24,10 @@ public class GameLevelScene extends Scene implements ML.ButtonPressListener {
     g2.setColor(Color.BLACK);
     g2.fillRect(0, 0, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
 
-    //draw the choose level text
-    g2.setColor(Color.WHITE);
-    g2.setFont(new Font("Arial", Font.BOLD, 35));
+    // Draw the "CHOOSE LEVEL" text
+    Util.drawText(g2, "CHOOSE LEVEL", Constants.SCREEN_WIDTH / 2, 150, Color.WHITE, "Arial", Font.BOLD, 35);
 
-    String chooseLevelText = "CHOOSE LEVEL";
-    FontMetrics fontMetrics = g2.getFontMetrics();
-    int textWidth = fontMetrics.stringWidth(chooseLevelText);
-    int x = (Constants.SCREEN_WIDTH - textWidth) / 2;
-    int y = 200;
-    g2.drawString(chooseLevelText, x, y);
-
-    //draw the buttons
+    // Draw the buttons
     for (int i = 0; i < 3; i++) {
       g2.setColor(Color.WHITE);
       g2.fill(new RoundRectangle2D.Double(100 + 200 * i, 250, 150, 35, 10, 10));
@@ -47,15 +38,10 @@ public class GameLevelScene extends Scene implements ML.ButtonPressListener {
         buttonText = "Low";
       else if (i == 1)
         buttonText = "Medium";
-      else buttonText = "Difficult";
+      else
+        buttonText = "Difficult";
 
-      g2.setColor(Color.BLACK);
-      g2.setFont(new Font("Arial", Font.BOLD, 20));
-      FontRenderContext frc = g2.getFontRenderContext();
-      Rectangle2D bounds = g2.getFont().getStringBounds(buttonText, frc);
-      int textX = (int) ((100 + 200 * i + 150 / 2) - bounds.getWidth() / 2);
-      int textY = (int) (250 + 35 / 2 + bounds.getHeight() / 2);
-      g2.drawString(buttonText, textX, textY);
+      Util.drawText(g2, buttonText, 100 + 200 * i + 75, 250 + 35 / 2, Color.BLACK, "Arial", Font.BOLD, 20);
     }
   }
 
@@ -71,7 +57,6 @@ public class GameLevelScene extends Scene implements ML.ButtonPressListener {
 
     Window.getWindow().changeState(1); // Change state to GameScene with speed
   }
-
 
   public double getSpeed() {
     return speed;

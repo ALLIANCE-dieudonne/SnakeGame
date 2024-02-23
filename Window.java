@@ -49,7 +49,7 @@ public class Window extends JFrame implements Runnable {
         if (currentScene instanceof GameLevelScene) {
           speed = ((GameLevelScene) currentScene).getSpeed();
         }
-        currentScene = new GameScene(keyListener, speed);
+        currentScene = new GameScene(keyListener, speed, mouseListener);
       }
       case 2 -> currentScene = new GameOverScene(keyListener, mouseListener);
 

@@ -4,7 +4,7 @@ import java.awt.font.FontRenderContext;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RoundRectangle2D;
 
-public class GameOverScene extends Scene {
+public class GameOverScene extends Scene implements ML.ButtonPressListener {
   private final KL keyListener;
   private final ML mouseListener;
 
@@ -16,8 +16,9 @@ public class GameOverScene extends Scene {
 
   @Override
   public void update(double dt) {
+    // Check if the "Restart" button is pressed
     if (keyListener.isKeyPressed(KeyEvent.VK_ENTER)) {
-      Window.getWindow().changeState(3); // Change state to menu scene
+      restartGame();
     }
   }
 
@@ -27,44 +28,52 @@ public class GameOverScene extends Scene {
     g2.setColor(Color.BLACK);
     g2.fillRect(0, 0, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
 
-    // Draw game over text
+    // Draw "GAME OVER" text
+    Util.drawText(g2, "GAME OVER", Constants.SCREEN_WIDTH / 2, 150, Color.WHITE, "Arial", Font.BOLD, 36);
+
+    // Draw the "Restart" button
     g2.setColor(Color.WHITE);
-    g2.setFont(new Font("Arial", Font.BOLD, 36));
-    String gameOverText = "GAME OVER";
-    FontMetrics fontMetrics = g2.getFontMetrics();
-    int textWidth = fontMetrics.stringWidth(gameOverText);
-    int x = (Constants.SCREEN_WIDTH - textWidth) / 2;
-    int y = 200;
-    g2.drawString(gameOverText, x, y);
+    RoundRectangle2D restartButton = new RoundRectangle2D.Double(320, 200, 150, 35, 10, 10);
+    g2.fill(restartButton);
 
-    // Draw instructions to restart
-    g2.setFont(new Font("Arial", Font.PLAIN, 18));
-    String restartText = "Press ENTER to restart";
-    fontMetrics = g2.getFontMetrics();
-    textWidth = fontMetrics.stringWidth(restartText);
-    x = (Constants.SCREEN_WIDTH - textWidth) / 2;
-    y += 45;
-    g2.drawString(restartText, x, y);
+    g2.setColor(Color.BLACK);
+    g2.setFont(new Font("Arial", Font.BOLD, 20));
+    FontRenderContext frc = g2.getFontRenderContext();
+    String restartText = "Restart";
+    Rectangle2D bounds = g2.getFont().getStringBounds(restartText, frc);
+    int textX = (int) (Constants.SCREEN_WIDTH / 2 - bounds.getWidth() / 2);
+    int textY = (int) (200 + 35 / 2 + bounds.getHeight() / 2);
+    g2.drawString(restartText, textX, textY);
 
-    // Drawing the exit button
+    // Draw the "Exit" button
     g2.setColor(Color.WHITE);
     RoundRectangle2D exitButton = new RoundRectangle2D.Double(320, 280, 150, 35, 10, 10);
     g2.fill(exitButton);
 
     g2.setColor(Color.BLACK);
-    g2.setFont(new Font("Arial", Font.BOLD, 20));
-    FontRenderContext frc = g2.getFontRenderContext();
-    String buttonText = "Exit";
-    Rectangle2D bounds = g2.getFont().getStringBounds(buttonText, frc);
-    int textX = (int) ((320 + 150 / 2) - bounds.getWidth() / 2);
-    int textY = (int) (280 + 35 / 2 + bounds.getHeight() / 2);
-    g2.drawString(buttonText, textX, textY);
+    String exitText = "Exit";
+    bounds = g2.getFont().getStringBounds(exitText, frc);
+    textX = (int) ((320 + 150 / 2) - bounds.getWidth() / 2);
+    textY = (int) (280 + 35 / 2 + bounds.getHeight() / 2);
+    g2.drawString(exitText, textX, textY);
   }
 
-  private void onButtonPressed(double x, double y) {
-    RoundRectangle2D.Double exitButton = new RoundRectangle2D.Double(100 + 200, 280, 150, 35, 10, 10);
-    if (exitButton.contains(x, y)) {
+  public void onButtonPressed(double x, double y) {
+    // Check if the "Restart" button is pressed
+    if (x >= 320 && x <= 470 &&
+      y >= 200 && y <= 235) {
+      restartGame();
+    }
+
+    // Check if the "Exit" button is pressed
+    if (x >= 320 && x <= 470 && y >= 280 && y <= 315) {
       Window.getWindow().close();
     }
+  }
+
+  // Method to restart the game
+  private void restartGame() {
+    // Change state to the menu scene
+    Window.getWindow().changeState(3);
   }
 }
