@@ -1,15 +1,11 @@
 import java.awt.*;
-import java.awt.font.FontRenderContext;
-import java.awt.geom.Rectangle2D;
 import java.awt.geom.RoundRectangle2D;
 
 public class GameLevelScene extends Scene implements ML.ButtonPressListener {
-  private final KL keyListener;
   private final ML mouseListener;
   double speed = 0;
 
-  public GameLevelScene(KL keyListener, ML mouseListener) {
-    this.keyListener = keyListener;
+  public GameLevelScene(ML mouseListener) {
     this.mouseListener = mouseListener;
     this.mouseListener.setButtonPressListener(this);
   }
@@ -53,6 +49,8 @@ public class GameLevelScene extends Scene implements ML.ButtonPressListener {
       speed = 0.2; // Set speed for medium level
     } else if (x >= 500 && x <= 650 && y >= 250 && y <= 285) {
       speed = 0.1; // Set speed for difficult level
+    }else{
+      return;
     }
 
     Window.getWindow().changeState(1); // Change state to GameScene with speed

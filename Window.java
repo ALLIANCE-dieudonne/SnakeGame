@@ -53,7 +53,7 @@ public class Window extends JFrame implements Runnable {
       }
       case 2 -> currentScene = new GameOverScene(keyListener, mouseListener);
 
-      case 3 -> currentScene = new GameLevelScene(keyListener, mouseListener);
+      case 3 -> currentScene = new GameLevelScene(mouseListener);
       default -> {
         System.out.println("Unknown scene.");
         currentScene = null;
